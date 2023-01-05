@@ -56,3 +56,4 @@ function updatePost(req, res) {
     });
 }
 exports.updatePost = updatePost;
+//# sourceMappingURL=post.controller.js.map

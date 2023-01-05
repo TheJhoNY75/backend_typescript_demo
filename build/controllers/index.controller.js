@@ -5,3 +5,4 @@ function indexWelcome(_req, res) {
     return res.json({ message: "Welcome to my API" });
 }
 exports.indexWelcome = indexWelcome;
+//# sourceMappingURL=index.controller.js.map

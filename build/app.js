@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const index_routes_1 = __importDefault(require("./routes/index.routes"));
 const post_routes_1 = __importDefault(require("./routes/post.routes"));
+//primer clase importada
 class App {
     constructor(port) {
         this.port = port;
@@ -44,3 +45,4 @@ class App {
     }
 }
 exports.App = App;
+//# sourceMappingURL=app.js.map
