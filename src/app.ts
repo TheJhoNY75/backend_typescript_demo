@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import indexRoutes from './routes/index.routes';
 import postRoutes from './routes/post.routes';
 
-//primer clase
+//primer clase importada
 
 export class App{
   
