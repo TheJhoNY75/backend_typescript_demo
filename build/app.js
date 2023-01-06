@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const index_routes_1 = __importDefault(require("./routes/index.routes"));
 const post_routes_1 = __importDefault(require("./routes/post.routes"));
+const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 //primer clase importada
 class App {
     constructor(port) {
@@ -27,7 +28,7 @@ class App {
         this.routes();
     }
     settings() {
-        this.app.set('port', this.port || process.env.PORT || 3333);
+        this.app.set('port', this.port || process.env.SERVER_PORT || 3333);
     }
     middlewares() {
         this.app.use((0, morgan_1.default)(`dev`));
@@ -36,6 +37,7 @@ class App {
     routes() {
         this.app.use(index_routes_1.default);
         this.app.use('/post', post_routes_1.default);
+        this.app.use('/singup', auth_routes_1.default);
     }
     listen() {
         return __awaiter(this, void 0, void 0, function* () {
