@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { singup } from "../controllers/auth.controller";
+import { createAuth } from "../controllers/auth.controller";
 
 const router = Router();
 
-router.post("/", singup);
+router.post("/", createAuth);
 
 export default router;

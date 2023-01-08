@@ -1,15 +1,21 @@
 import express, { Application } from 'express';
 import morgan from 'morgan';
-import { jsonErrorHandler } from './validate';
+import { jsonErrorHandler } from './middlewares';
 import indexRoutes from './routes/index.routes';
 import postRoutes from './routes/post.routes';
 import authRoutes from './routes/auth.routes';
-import productRoutes from './routes/product.routes';
 import userRoutes from './routes/user.routes';
 
+//swagger
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsDoc from 'swagger-jsdoc';
+import { swaggerSpecs } from './utils';
 
-//primer clase importada
+const swaggerUiOptions = {
+  explorer: true
+};
 
+const swaggerOptions = swaggerJsDoc(swaggerSpecs);
 
 export class App{
   
@@ -34,10 +40,10 @@ export class App{
 
   routes(){
     this.app.use(indexRoutes);
-    this.app.use('/api/post', postRoutes);
-    this.app.use('/api/singup', authRoutes);
-    this.app.use('/api/product', productRoutes);
+    this.app.use('/api/auth', authRoutes);
     this.app.use('/api/user', userRoutes);
+    this.app.use('/api/post', postRoutes);
+    this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions, swaggerUiOptions));
   }
 
   async listen() {

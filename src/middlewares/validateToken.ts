@@ -15,6 +15,3 @@ export const validateToken = async  (req: Request, res: Response, next: NextFunc
     res.status(401).json({message: "Access denied"})
   }
 };
-
-export * from './postValidation';
-export * from './jsonErrorHandler';
