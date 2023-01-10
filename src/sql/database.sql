@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS jhony_test;
+CREATE DATABASE IF NOT EXISTS db_posts_demo;
 
-USE jhony_test;
+USE db_posts_demo;
 
 CREATE TABLE IF NOT EXISTS roles(
     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,

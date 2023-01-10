@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { connect } from '../database';
+import { connect } from '../../database';
 
 
 export async function getProducts(_req: Request, res: Response): Promise<Response> {

@@ -4,6 +4,38 @@ import jwt from "jsonwebtoken";
 import { UserLogin } from "../../interfaces/User";
 import { connect } from "../../database";
 
+/**
+ * 
+ * @swagger
+ * /api/auth:
+ *  post:
+ *    summary: Create a new auth
+ *    tags:
+ *      - Auth
+ *    description: This enpoint create a new auth
+ *    requestBody:
+ *      required: 
+ *        - email
+ *        - password
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/AuthRequest'
+ *    responses:
+ *      200:
+ *        description: A successful response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/AuthResponse'
+ *      400:
+ *        description: Bad request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Message'
+ */
+
 
 export async function createAuth( req: Request, res: Response): Promise<Response> {
   const { email, password }: UserLogin = req.body;

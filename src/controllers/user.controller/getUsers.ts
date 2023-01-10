@@ -3,17 +3,18 @@ import { connect } from "../../database";
 
 //options
 import { sortByOptions, orderOptions, getOffset, getPages, getInfo } from "../../utils";
+import { UserResponse } from '../../interfaces/User';
 
 /**
  * @swagger
- * /api/post:
+ * /api/user:
  *  get:
  *    security:
  *      - Authorization: []
  *    tags:
- *      - Post
- *    summary: Get all posts
- *    description: Use to request all posts
+ *      - User
+ *    summary: Get all users
+ *    description: Use to request all users
  *    responses:
  *      200:
  *        description: A successful response
@@ -25,7 +26,7 @@ import { sortByOptions, orderOptions, getOffset, getPages, getInfo } from "../..
  *                results:
  *                  type: array
  *                  items:
- *                    $ref: '#/components/schemas/PostResponse'
+ *                    $ref: '#/components/schemas/UserResponse'
  *                info:
  *                  $ref: '#/components/schemas/Paginate'
  *      400:
@@ -36,7 +37,7 @@ import { sortByOptions, orderOptions, getOffset, getPages, getInfo } from "../..
  *              $ref: '#/components/schemas/Message'
  */
 
-export async function getPosts(req: Request, res: Response): Promise<Response> {
+export async function getUsers(req: Request, res: Response): Promise<Response> {
   const conn = await connect();
 
   const limmit: any = req.query.limmit || 10;
@@ -51,14 +52,30 @@ export async function getPosts(req: Request, res: Response): Promise<Response> {
   if(!orderOptions.includes(order)) 
     return res.status(400).json({message: "Invalid order option", valid_options: orderOptions});
   
-  const totalItems = await conn.query("SELECT COUNT(*) as total FROM posts")as any;
+  const totalItems = await conn.query("SELECT COUNT(*) as total FROM users")as any;
   
   const { pages } = getPages({totalItems, limmit}) ;
   //validate exist content
   if(page > pages ) 
-    return res.status(404).json({message: "No more posts"});
+    return res.status(404).json({message: "No more users"});
 
-  const posts = await conn.query(`SELECT * FROM posts ORDER BY ${sortBy} ${order} LIMIT ?,?`, [Math.floor(offset), parseInt(limmit) ]);
+  const users = await conn.query(`SELECT * FROM users ORDER BY ${sortBy} ${order} LIMIT ?,?`, [Math.floor(offset), parseInt(limmit) ]) as any;
+
+  const usersSerialized = users[0].map(({ 
+    id, 
+    email, 
+    first_name, 
+    last_name, 
+    created_at, 
+    updated_at 
+  }: UserResponse) => ({
+      id,
+      email,
+      first_name,
+      last_name,
+      created_at,
+      updated_at,
+    })); 
   
-  return res.status(200).json({results: posts[0], info: getInfo({ page, limmit, totalItems, sortBy, order })});
+  return res.status(200).json({results: usersSerialized, info: getInfo({ page, limmit, totalItems, sortBy, order })});
 }

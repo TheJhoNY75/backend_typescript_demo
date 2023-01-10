@@ -1,3 +1,16 @@
+import {
+  Paginate,
+  Message,
+  getId,
+  PostRequest,
+  PostRequestUpdate,
+  PostResponse,
+  AuthRequest,
+  AuthResponse,
+  UserRequest,
+  UserResponse,
+} from "./swaggerComponents";
+
 export const swaggerSpecs = {
   definition: {
     openapi: "3.0.3",
@@ -15,6 +28,20 @@ export const swaggerSpecs = {
           value: "Bearer <JWT token here>",
         },
       },
+      schemas: {
+        Paginate,
+        Message,
+        PostRequest,
+        PostRequestUpdate,
+        PostResponse,
+        AuthRequest,
+        AuthResponse,
+        UserRequest,
+        UserResponse,
+      },
+      parameters: {
+        getId,
+      },
     },
     servers: [
       {
@@ -23,5 +50,5 @@ export const swaggerSpecs = {
       },
     ],
   },
-  apis: ["./src/routes/*.ts"],
+  apis: ["./src/controllers/**/*.ts", "./src/routes/*.ts"],
 };
