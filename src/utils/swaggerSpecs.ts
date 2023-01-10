@@ -48,6 +48,10 @@ export const swaggerSpecs = {
         url: "http://localhost:3333",
         description: "Development server",
       },
+      {
+        url: "https://thejhony.com",
+        description: "Production server",
+      }
     ],
   },
   apis: ["./src/controllers/**/*.ts", "./src/routes/*.ts"],

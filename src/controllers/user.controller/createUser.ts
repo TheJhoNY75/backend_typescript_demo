@@ -4,6 +4,10 @@ import { v4 as uuid } from "uuid";
 import { User } from "../../interfaces/User";
 import { connect } from "../../database";
 
+const SaltEnv = parseInt(process.env.BYCRYPT_SALT || '');
+
+const SALT_VALUE = Number.isInteger(SaltEnv) ? SaltEnv : 10;
+
 /**
  * @swagger
  *  /api/user:
@@ -41,7 +45,7 @@ export async function createUser( req: Request, res: Response) {
   const { email, first_name, last_name, password }: User = req.body;  
   const id = uuid();
   const date = new Date();
-  const hashedPassword = await bcrypt.hash( password, 10);
+  const hashedPassword = await bcrypt.hash( password, SALT_VALUE);
   const conn = await connect();
   try{
     await conn.query("INSERT INTO users SET ?", [

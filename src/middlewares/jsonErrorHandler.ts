@@ -1,5 +1,10 @@
 import { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
 
-export const jsonErrorHandler = (err: ErrorRequestHandler, _req: Request, res: Response, _next: NextFunction) => {
-  res.status(500).send({ message: "an object of type json was expected", error: err });  
+interface IError extends ErrorRequestHandler {
+  type: string;
+  body: string;
+}
+
+export const jsonErrorHandler = (err: IError, _req: Request, res: Response, _next: NextFunction) => {
+  return res.status(500).send({ message: "an object of type json was expected", error: err }); 
 }

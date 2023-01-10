@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
 import { jsonErrorHandler } from './middlewares';
 import indexRoutes from './routes/index.routes';
 import postRoutes from './routes/post.routes';
@@ -34,8 +35,9 @@ export class App{
 
   middlewares(){
     this.app.use(morgan(`dev`));
+    this.app.use(cors({ origin: 'http://localhost:3000' }));
     this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(express.urlencoded({ extended: false }));
     this.app.use(jsonErrorHandler);
   }
 

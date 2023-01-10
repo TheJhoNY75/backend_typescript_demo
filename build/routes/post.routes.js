@@ -6,9 +6,9 @@ const middlewares_1 = require("../middlewares");
 const router = (0, express_1.Router)();
 /**
  * @swagger
- * /api/post:
- * get:
- *   summary: Get all posts
+ * tags:
+ *  name: Post
+ *  description: The post API
  */
 router.get("/", middlewares_1.validateToken, post_controller_1.getPosts);
 router.post("/", middlewares_1.validateToken, middlewares_1.validatePost, post_controller_1.createPost);
