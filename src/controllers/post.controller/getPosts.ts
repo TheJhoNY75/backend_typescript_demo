@@ -58,7 +58,7 @@ export async function getPosts(req: Request, res: Response): Promise<Response> {
   if(page > pages ) 
     return res.status(404).json({message: "No more posts"});
 
-  const posts = await conn.query(`SELECT * FROM posts ORDER BY ${sortBy} ${order} LIMIT ?,?`, [Math.floor(offset), parseInt(limmit) ]);
+  const posts = await conn.query(`SELECT * FROM posts ORDER BY ${sortBy} ${order} LIMIT ?,?`, [Math.floor(offset), parseInt(limmit)]);
   
   return res.status(200).json({results: posts[0], info: getInfo({ page, limmit, totalItems, sortBy, order })});
 }

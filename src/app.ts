@@ -6,6 +6,7 @@ import indexRoutes from './routes/index.routes';
 import postRoutes from './routes/post.routes';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
+import whoamiRouets from './routes/whoami.routes';
 
 //swagger
 import swaggerUi from 'swagger-ui-express';
@@ -35,7 +36,9 @@ export class App{
 
   middlewares(){
     this.app.use(morgan(`dev`));
-    this.app.use(cors({ origin: 'http://localhost:3000' }));
+    this.app.use(cors({
+      origin: '*',
+    }));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(jsonErrorHandler);
@@ -46,6 +49,7 @@ export class App{
     this.app.use('/api/auth', authRoutes);
     this.app.use('/api/user', userRoutes);
     this.app.use('/api/post', postRoutes);
+    this.app.use('/api/whoami', whoamiRouets)
     this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions, swaggerUiOptions));
   }
 

@@ -12,6 +12,17 @@ CREATE TABLE IF NOT EXISTS roles(
 
 INSERT INTO roles (name, description) VALUES ('default', 'Default role');
 
+CREATE TABLE IF NOT EXISTS profiles(
+    id CHAR(36) NOT NULL PRIMARY KEY,
+    employment VARCHAR(255),
+    bio TEXT,
+    image_url TEXT,
+    skills TEXT,
+    hobbies TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS users(
     id CHAR(36) NOT NULL PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -19,12 +30,16 @@ CREATE TABLE IF NOT EXISTS users(
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     role_id INT(11) NOT NULL,
+    profile_id CHAR(36),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE INDEX role_id ON users(role_id);
 ALTER TABLE users ADD FOREIGN KEY(role_id) REFERENCES roles(id);
+
+CREATE INDEX profile_id ON users(profile_id);
+ALTER TABLE users ADD FOREIGN KEY(profile_id) REFERENCES profiles(id);
 
 CREATE TABLE IF NOT EXISTS posts(
     id CHAR(36) NOT NULL PRIMARY KEY,
@@ -38,6 +53,8 @@ CREATE TABLE IF NOT EXISTS posts(
 
 CREATE INDEX user_id ON posts(user_id);
 ALTER TABLE posts ADD FOREIGN KEY(user_id) REFERENCES users(id);
+
+
 
 
 -- CREATE TABLE IF NOT EXISTS products(
