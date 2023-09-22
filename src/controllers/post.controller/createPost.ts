@@ -47,7 +47,7 @@ export async function createPost(req: Request, res: Response): Promise<Response>
     title, 
     description, 
     image_url,
-    user_id
+    user_id,
   }
   const conn = await connect();
   
