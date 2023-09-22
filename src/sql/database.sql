@@ -1,9 +1,77 @@
-CREATE DATABASE database_test;
+CREATE DATABASE IF NOT EXISTS db_posts_demo;
 
-CREATE TABLE posts(
+USE db_posts_demo;
+
+CREATE TABLE IF NOT EXISTS roles(
     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO roles (name, description) VALUES ('default', 'Default role');
+
+CREATE TABLE IF NOT EXISTS profiles(
+    id CHAR(36) NOT NULL PRIMARY KEY,
+    employment VARCHAR(255),
+    bio TEXT,
+    image_url TEXT,
+    skills TEXT,
+    hobbies TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS users(
+    id CHAR(36) NOT NULL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    role_id INT(11) NOT NULL,
+    profile_id CHAR(36),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE INDEX role_id ON users(role_id);
+ALTER TABLE users ADD FOREIGN KEY(role_id) REFERENCES roles(id);
+
+CREATE INDEX profile_id ON users(profile_id);
+ALTER TABLE users ADD FOREIGN KEY(profile_id) REFERENCES profiles(id);
+
+CREATE TABLE IF NOT EXISTS posts(
+    id CHAR(36) NOT NULL PRIMARY KEY,
+    user_id CHAR(36) NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     image_url TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+CREATE INDEX user_id ON posts(user_id);
+ALTER TABLE posts ADD FOREIGN KEY(user_id) REFERENCES users(id);
+
+
+
+
+-- CREATE TABLE IF NOT EXISTS products(
+--     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+--     name VARCHAR(255) NOT NULL,
+--     description TEXT NOT NULL,
+--     price DECIMAL(10,2) NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- );
+
+-- CREATE TABLE IF NOT EXISTS test(
+--     id CHAR(36) NOT NULL PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL,
+--     description TEXT NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- );
+
+-- INSERT INTO test (id, name, description) VALUES (UUID(), 'test', 'test desctiption');

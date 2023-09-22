@@ -15,8 +15,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
+const cors_1 = __importDefault(require("cors"));
+const middlewares_1 = require("./middlewares");
 const index_routes_1 = __importDefault(require("./routes/index.routes"));
 const post_routes_1 = __importDefault(require("./routes/post.routes"));
+const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
+const user_routes_1 = __importDefault(require("./routes/user.routes"));
+//swagger
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
+const utils_1 = require("./utils");
+const swaggerUiOptions = {
+    explorer: true
+};
+const swaggerOptions = (0, swagger_jsdoc_1.default)(utils_1.swaggerSpecs);
 class App {
     constructor(port) {
         this.port = port;
@@ -26,15 +38,21 @@ class App {
         this.routes();
     }
     settings() {
-        this.app.set('port', this.port || process.env.PORT || 3333);
+        this.app.set('port', this.port || process.env.SERVER_PORT || 3333);
     }
     middlewares() {
         this.app.use((0, morgan_1.default)(`dev`));
+        this.app.use((0, cors_1.default)({ origin: 'http://localhost:3000' }));
         this.app.use(express_1.default.json());
+        this.app.use(express_1.default.urlencoded({ extended: false }));
+        this.app.use(middlewares_1.jsonErrorHandler);
     }
     routes() {
         this.app.use(index_routes_1.default);
-        this.app.use('/post', post_routes_1.default);
+        this.app.use('/api/auth', auth_routes_1.default);
+        this.app.use('/api/user', user_routes_1.default);
+        this.app.use('/api/post', post_routes_1.default);
+        this.app.use('/api/docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerOptions, swaggerUiOptions));
     }
     listen() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -44,3 +62,4 @@ class App {
     }
 }
 exports.App = App;
+//# sourceMappingURL=app.js.map

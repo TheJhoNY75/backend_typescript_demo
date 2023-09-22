@@ -5,3 +5,4 @@ const index_controller_1 = require("../controllers/index.controller");
 const router = (0, express_1.Router)();
 router.get("/", index_controller_1.indexWelcome);
 exports.default = router;
+//# sourceMappingURL=index.routes.js.map

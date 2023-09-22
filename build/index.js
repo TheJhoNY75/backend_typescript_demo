@@ -8,12 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv_1 = __importDefault(require("dotenv"));
 const app_1 = require("./app");
+dotenv_1.default.config();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        const app = new app_1.App(3333);
+        const app = new app_1.App();
         yield app.listen();
     });
 }
 main();
+//# sourceMappingURL=index.js.map

@@ -1,9 +1,23 @@
 import express, { Application } from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
+import { jsonErrorHandler } from './middlewares';
 import indexRoutes from './routes/index.routes';
 import postRoutes from './routes/post.routes';
+import authRoutes from './routes/auth.routes';
+import userRoutes from './routes/user.routes';
+import whoamiRouets from './routes/whoami.routes';
 
-//primer clase importada
+//swagger
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsDoc from 'swagger-jsdoc';
+import { swaggerSpecs } from './utils';
+
+const swaggerUiOptions = {
+  explorer: true
+};
+
+const swaggerOptions = swaggerJsDoc(swaggerSpecs);
 
 export class App{
   
@@ -17,17 +31,26 @@ export class App{
   }
 
   settings(){
-    this.app.set('port', this.port || process.env.PORT || 3333);
+    this.app.set('port', this.port || process.env.SERVER_PORT || 3333);
   }
 
   middlewares(){
     this.app.use(morgan(`dev`));
+    this.app.use(cors({
+      origin: '*',
+    }));
     this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: false }));
+    this.app.use(jsonErrorHandler);
   }
 
   routes(){
     this.app.use(indexRoutes);
-    this.app.use('/post', postRoutes);
+    this.app.use('/api/auth', authRoutes);
+    this.app.use('/api/user', userRoutes);
+    this.app.use('/api/post', postRoutes);
+    this.app.use('/api/whoami', whoamiRouets)
+    this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions, swaggerUiOptions));
   }
 
   async listen() {
