@@ -1,4 +1,4 @@
-# README for Backend Test Project
+# README for Backend Demo Project
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -16,6 +16,8 @@
 ## Introduction
 
 Welcome to the **backend-demo** project! This is a backend application template with a focus on Node.js and TypeScript. It's designed to provide you with a starting point for building RESTful APIs, web services, or other backend applications. Below, you will find information on how to set up, configure, and run this project.
+
+I recommend using `PNPM` instead of NPM or YARN because `PNPM` is faster and more efficient. The entire project is built using `PNPM`.
 
 ## Project Structure
 
@@ -60,7 +62,7 @@ Before you start, make sure you have the following software installed on your sy
 3. Install the project dependencies:
 
    ```bash
-   npm install
+   pnpm install
     ```
 ### Configuration
 
@@ -81,7 +83,7 @@ Before you start, make sure you have the following software installed on your sy
 To start the application in development mode, run:
   
   ```bash
-  npm run dev
+  pnpm run dev
   ```
 
 The application will run at `http://localhost:3000`.
@@ -89,16 +91,16 @@ The application will run at `http://localhost:3000`.
 To build and start the application in production mode, run:
 
   ```bash
-  npm run build
-  npm start
+  pnpm run build
+  pnpm start
   ```
 
 ## Scripts
 
-- `npm start`: Starts the application in production mode.
-- `npm run dev`: Start the application in development mode using `ts-node-dev`.
-- `npm run build`: Build the TypeScript code into JavaScript.
-- `npm run test`: Placeholder script for running tests (You can configure your tests here).
+- `pnpm start`: Starts the application in production mode.
+- `pnpm run dev`: Start the application in development mode using `ts-node-dev`.
+- `pnpm run build`: Build the TypeScript code into JavaScript.
+- `pnpm run test`: Placeholder script for running tests (You can configure your tests here).
 
 ## Dependencies
 
