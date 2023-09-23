@@ -37,7 +37,7 @@ export class App{
   middlewares(){
     this.app.use(morgan(`dev`));
     this.app.use(cors({
-      origin: '*',
+      origin: 'http://localhost:3333',
     }));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));

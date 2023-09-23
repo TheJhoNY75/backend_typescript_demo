@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { connect } from "../../database";
+import { PrismaClient } from "@prisma/client";
 
 /**
  * @swagger
@@ -28,10 +28,23 @@ import { connect } from "../../database";
  *              $ref: '#/components/schemas/Message'
  */
 
+const prisma = new PrismaClient();
+
 export async function getPost(req: Request, res: Response): Promise<Response> {
   const id = req.params.postId;
-  const conn = await connect();
-  const [results] = await conn.query("SELECT * FROM posts WHERE id = ?", [id]) as any;
-  if(results.length === 0) return res.status(404).json({message: "Post not found"});
-  return res.json(results[0]);
+  try{
+    const post = await prisma.posts.findUnique({
+      where: { id },
+    });
+    if(post){
+      return res.json(post);
+    }else{
+      return res.status(404).json({message: "Post not found"});
+    }
+  }catch(err){
+    console.log(err);
+    return res.status(404).json({message: "Something went wrong"});
+  }finally{
+    await prisma.$disconnect();
+  }
 }

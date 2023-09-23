@@ -18,7 +18,7 @@ export const getOffset = ({ page, limmit }: IgetPaginate) => {
 };
 
 export const getPages = ({ totalItems, limmit }: IgetPaginate) => {
-  const pages = Math.ceil(totalItems[0][0].total / limmit) !== 0 ? Math.ceil(totalItems[0][0].total / limmit) : 1;
+  const pages = Math.ceil(totalItems / limmit) !== 0 ? Math.ceil(totalItems / limmit) : 1;
   return { pages };
 };
 
@@ -27,7 +27,7 @@ export const getInfo = ({ page, limmit, totalItems, sortBy, order }: IgetPaginat
   const { pages } = getPages({ totalItems, limmit });
   return {
     page: parseInt(page),
-    count: totalItems[0][0].total,
+    count: totalItems,
     next: page < pages ? nextPageUrl : null,
     prev: page > 1 ? prevPageUrl : null,
     pages,

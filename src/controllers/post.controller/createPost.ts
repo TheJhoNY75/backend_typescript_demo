@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { v4 as uuid } from 'uuid';
-import { connect } from "../../database";
+import { PrismaClient } from "@prisma/client";
 
 //interfaces
 import { Post } from "../../interfaces/Post";
@@ -38,25 +37,26 @@ import { Post } from "../../interfaces/Post";
  *              $ref: '#/components/schemas/Message'
  */
 
+const prisma = new PrismaClient();
+
 export async function createPost(req: Request, res: Response): Promise<Response> {
   const { title, description, image_url, user_id }: Post = req.body;
-  const id = uuid();
-  const date = new Date();
-  const newPost: Post = {
-    id,
-    title, 
-    description, 
-    image_url,
-    user_id,
-  }
-  const conn = await connect();
-  
   try{
-    await conn.query("INSERT INTO posts SET ?", [newPost]);
-    return res.json({...newPost, created_at: date, updated_at: date});
+  const newPost = await prisma.posts.create({
+    data: {
+      title, 
+      description, 
+      image_url,
+      user_id,
+    }
+  });  
+    return res.json(newPost);
   }catch(err){
+    console.log(err);
     return res.json({
       message: "User id is not valid",
     })
+  }finally{
+    await prisma.$disconnect();
   }
 }

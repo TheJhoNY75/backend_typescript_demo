@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validateToken } from "../middlewares";
+import { validateToken, validateUser } from "../middlewares";
 import { createUser, getUsers } from "../controllers/user.controller";
 
 const router = Router();
@@ -11,7 +11,7 @@ const router = Router();
  *    description: The user API
  */
 
-router.post("/", createUser)
+router.post("/", validateUser, createUser)
 
 router.get("/", validateToken, getUsers)
 

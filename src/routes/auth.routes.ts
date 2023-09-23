@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { createAuth } from "../controllers/auth.controller";
+import { validateAuth } from "../middlewares";
 
 const router = Router();
 
@@ -10,6 +11,6 @@ const router = Router();
  *  description: The auth API
  */
 
-router.post("/", createAuth);
+router.post("/", validateAuth, createAuth);
 
 export default router;
