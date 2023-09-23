@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { connect } from "../../database";
+import { PrismaClient } from "@prisma/client";
 
 //options
 import { sortByOptions, orderOptions, getOffset, getPages, getInfo } from "../../utils";
@@ -36,13 +36,13 @@ import { sortByOptions, orderOptions, getOffset, getPages, getInfo } from "../..
  *              $ref: '#/components/schemas/Message'
  */
 
-export async function getPosts(req: Request, res: Response): Promise<Response> {
-  const conn = await connect();
+const prisma = new PrismaClient();
 
+export async function getPosts(req: Request, res: Response): Promise<Response> {
   const limmit: any = req.query.limmit || 10;
   const page: any = req.query.page || 1;
   const sortBy: any =  req.query.sortby || "created_at";
-  const order: any = req.query.order || "ASC";
+  const order: any = req.query.order || "asc";
   const { offset } = getOffset({page, limmit});
   
   //validate options
@@ -50,15 +50,24 @@ export async function getPosts(req: Request, res: Response): Promise<Response> {
     return res.status(400).json({message: "Invalid sortby option", valid_options: sortByOptions});
   if(!orderOptions.includes(order)) 
     return res.status(400).json({message: "Invalid order option", valid_options: orderOptions});
-  
-  const totalItems = await conn.query("SELECT COUNT(*) as total FROM posts")as any;
-  
-  const { pages } = getPages({totalItems, limmit}) ;
-  //validate exist content
-  if(page > pages ) 
-    return res.status(404).json({message: "No more posts"});
-
-  const posts = await conn.query(`SELECT * FROM posts ORDER BY ${sortBy} ${order} LIMIT ?,?`, [Math.floor(offset), parseInt(limmit)]);
-  
-  return res.status(200).json({results: posts[0], info: getInfo({ page, limmit, totalItems, sortBy, order })});
+  try{
+    const totalItems = await prisma.posts.count();
+    const { pages } = getPages({totalItems, limmit}) ;
+    //validate exist content
+    if(page > pages ) 
+      return res.status(404).json({message: "No more posts"});
+    const posts = await prisma.posts.findMany({
+      orderBy: {
+        [sortBy]: order
+      },
+      skip: Math.floor(offset),
+      take: parseInt(limmit),
+    });    
+    return res.status(200).json({results: posts, info: getInfo({ page, limmit, totalItems, sortBy, order })});
+  }catch(err){
+    console.log(err);
+    return res.status(400).json({message: "Something went wrong"});
+  }finally{
+    await prisma.$disconnect();
+  }
 }

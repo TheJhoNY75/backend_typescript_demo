@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DB_URL")
+}
+
+model Roles {
+  id Int @id @default(autoincrement())
+  name String @unique @db.VarChar(255)
+  description String @db.Text
+  users Users[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Profiles{
+  id String @id @db.Char(36) @default(uuid())
+  employment String? @db.VarChar(255)
+  bio String? @db.Text
+  image_url String? @db.Text
+  skills String? @db.Text
+  hobbies String? @db.Text
+  phone String? @db.VarChar(255)
+  address String? @db.VarChar(255)
+  users Users[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+
+model Users {
+  id String @id @db.Char(36) @default(uuid())
+  email String  @unique @db.VarChar(255)
+  password String @db.VarChar(255)
+  first_name String @db.VarChar(255)
+  last_name String @db.VarChar(255)
+  role Roles @relation(fields: [role_id], references: [id])
+  role_id Int @default(1) 
+  profile Profiles @relation(fields: [profile_id], references: [id])
+  profile_id String @db.Char(36)
+  posts Posts[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Posts {
+  id String @id @db.Char(36) @default(uuid())
+  title String @db.VarChar(255)
+  description String @db.Text
+  image_url String? @db.Text
+  user Users @relation(fields: [user_id], references: [id])
+  user_id String @db.Char(36)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}

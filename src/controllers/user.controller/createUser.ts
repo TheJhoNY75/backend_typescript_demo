@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { v4 as uuid } from "uuid";
 import { User } from "../../interfaces/User";
-import { connect } from "../../database";
 
 const SaltEnv = parseInt(process.env.BYCRYPT_SALT || '');
 
@@ -41,21 +40,32 @@ const SALT_VALUE = Number.isInteger(SaltEnv) ? SaltEnv : 10;
  *                 $ref: '#/components/schemas/Message'
  */
 
+const prisma = new PrismaClient();
+
 export async function createUser( req: Request, res: Response) {
   const { email, first_name, last_name, password }: User = req.body;  
-  const id = uuid();
-  const date = new Date();
-  const hashedPassword = await bcrypt.hash( password, SALT_VALUE);
-  const conn = await connect();
   try{
-    await conn.query("INSERT INTO users SET ?", [
-      { id, email, first_name, last_name, password: hashedPassword, role_id: 1 },
-    ]);
-    return res.json({ id, email, first_name, last_name, created_at: date, updated_at: date });
+    const newProfile = await prisma.profiles.create({
+      data: {},
+    });
+    const hashedPassword = await bcrypt.hash( password, SALT_VALUE);
+    const newUser: User = await prisma.users.create({
+      data: {
+        email,
+        first_name,
+        last_name,
+        password: hashedPassword,
+        profile_id: newProfile.id,
+      },
+    });
+    const { password: _, ...user } = newUser;
+    return res.json(user);
   }catch(err: any){
     console.log(err);
     if(err.code === "ER_DUP_ENTRY")
       return res.json({ message: "Email already exists" });
     return res.json({ message: "Something went wrong" });
+  }finally{
+    await prisma.$disconnect();
   }
 }

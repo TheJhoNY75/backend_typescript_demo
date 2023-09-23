@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import { connect } from "../../database";
+import { PrismaClient } from "@prisma/client";
 
 //options
 import { sortByOptions, orderOptions, getOffset, getPages, getInfo } from "../../utils";
-import { UserResponse } from '../../interfaces/User';
 
 /**
  * @swagger
@@ -37,8 +36,9 @@ import { UserResponse } from '../../interfaces/User';
  *              $ref: '#/components/schemas/Message'
  */
 
+const prisma = new PrismaClient();
+
 export async function getUsers(req: Request, res: Response): Promise<Response> {
-  const conn = await connect();
 
   const limmit: any = req.query.limmit || 10;
   const page: any = req.query.page || 1;
@@ -51,31 +51,28 @@ export async function getUsers(req: Request, res: Response): Promise<Response> {
     return res.status(400).json({message: "Invalid sortby option", valid_options: sortByOptions});
   if(!orderOptions.includes(order)) 
     return res.status(400).json({message: "Invalid order option", valid_options: orderOptions});
-  
-  const totalItems = await conn.query("SELECT COUNT(*) as total FROM users")as any;
-  
-  const { pages } = getPages({totalItems, limmit}) ;
-  //validate exist content
-  if(page > pages ) 
-    return res.status(404).json({message: "No more users"});
-
-  const users = await conn.query(`SELECT * FROM users ORDER BY ${sortBy} ${order} LIMIT ?,?`, [Math.floor(offset), parseInt(limmit) ]) as any;
-
-  const usersSerialized = users[0].map(({ 
-    id, 
-    email, 
-    first_name, 
-    last_name, 
-    created_at, 
-    updated_at 
-  }: UserResponse) => ({
-      id,
-      email,
-      first_name,
-      last_name,
-      created_at,
-      updated_at,
-    })); 
-  
-  return res.status(200).json({results: usersSerialized, info: getInfo({ page, limmit, totalItems, sortBy, order })});
+  try{
+    const totalItems = await prisma.users.count();
+    const { pages } = getPages({totalItems, limmit}) ;
+    //validate exist content
+    if(page > pages ) 
+      return res.status(404).json({message: "No more users"});
+    const users = await prisma.users.findMany({
+      orderBy: {
+        [sortBy]: order
+      },
+      skip: Math.floor(offset),
+      take: parseInt(limmit)
+    });
+    const filteredUsers = users.map(user => {
+      const { password: _, ...rest } = user;
+      return rest;
+    });
+    return res.status(200).json({results: filteredUsers, info: getInfo({ page, limmit, totalItems, sortBy, order })});
+  }catch(err){
+    console.log(err);
+    return res.status(400).json({message: "Something went wrong"});
+  }finally{
+    await prisma.$disconnect();
+  }
 }

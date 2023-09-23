@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { connect } from "../../database";
+import { PrismaClient } from "@prisma/client";
 
 /**
  * @swagger
@@ -28,12 +28,24 @@ import { connect } from "../../database";
  *              $ref: '#/components/schemas/Message'
  */
 
+const prisma = new PrismaClient();
+
 export async function deletePost(req: Request, res: Response): Promise<Response> {
   const id = req.params.postId;
-  const conn = await connect();
-  const results = await conn.query("DELETE FROM posts WHERE id = ?", [id]) as any;
-  
-  if(results[0].affectedRows === 0) return res.status(404).json({message: "Post not found to delete"});
-
-  return res.json({message: "Post deleted"});
+  try{
+    const post = await prisma.posts.delete({
+      where: { id },
+    });
+    console.log(post);
+    
+    if(post){
+      return res.json({message: "Post deleted"});
+    }
+    return res.status(404).json({message: "Post not found"});
+  }catch(err){
+    console.log(err);
+    return res.status(404).json({message: "Something went wrong"});
+  }finally{
+    await prisma.$disconnect();
+  }
 }
