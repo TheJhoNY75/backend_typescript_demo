@@ -1,7 +1,7 @@
 {
-  "name": "backend-test",
+  "name": "backend-demo",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "start": "node build/index.js",
     "dev": "ts-node-dev src/index.ts",
