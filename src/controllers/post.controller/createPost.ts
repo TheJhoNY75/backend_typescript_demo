@@ -50,7 +50,7 @@ export async function createPost(req: Request, res: Response): Promise<Response>
       user_id,
     }
   });  
-    return res.json(newPost);
+    return res.json(newPost);    
   }catch(err){
     console.log(err);
     return res.json({

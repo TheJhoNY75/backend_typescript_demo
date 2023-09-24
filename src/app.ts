@@ -23,7 +23,7 @@ export class App{
   
   private app: Application;
 
-  constructor(private port?: number | string){
+  constructor(private port?: number | string, private host?: string){
     this.app = express();
     this.settings();
     this.middlewares();
@@ -31,13 +31,14 @@ export class App{
   }
 
   settings(){
+    this.app.set('host', this.host || process.env.SERVER_HOST || 'http://localhost');
     this.app.set('port', this.port || process.env.SERVER_PORT || 3333);
   }
 
   middlewares(){
     this.app.use(morgan(`dev`));
     this.app.use(cors({
-      origin: ['http://localhost:3333', 'https://thejhony.com'],
+      origin: [`${this.app.get('host')}:${this.app.get('port')}`, 'https://thejhony.com'],
     }));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
@@ -53,7 +54,11 @@ export class App{
     this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions, swaggerUiOptions));
   }
 
-  async listen() {
+  address(){
+    return `${this.app.get('host')}:${this.app.get('port')}`;
+  }
+
+  async start() {
     await this.app.listen(this.app.get('port'));
     console.log('Server started on port ', this.app.get('port'));
   }
