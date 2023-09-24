@@ -131,7 +131,7 @@ To build and start the application in production mode, run:
 - `supertest`: HTTP assertion library.
 - `prisma`: Prisma CLI for database migrations and seeding.
 - `ts-jest`: TypeScript preprocessor for Jest.
-- `ts-node` and `ts-node-dev`: TypeScript execution environment for development.
+- `ts-node-dev`: TypeScript execution environment for development.
 - `ts-standard`: TypeScript linter configuration.
 - `typescript`: TypeScript compiler.
 
