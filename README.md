@@ -70,13 +70,22 @@ Before you start, make sure you have the following software installed on your sy
 
    ```bash
     # Example .env file
+    HOST=http://localhost
     PORT=3000
-    DB_URL=mysql://user:password@localhost:3306/mydb
+    DB_URL=mysql://user:password@localhost:3306/db_name
     JWT_SECRET=your-secret-key
     BYCRYPT_SALT=10
    ```
 
    Make sure to replace the placeholders with your actual values.
+
+### Database Setup
+
+Run Prisma migrations to create the database schema:
+
+  ```bash
+  pnpm run migrate
+  ```
 
 ### Running the Application
 
@@ -100,7 +109,8 @@ To build and start the application in production mode, run:
 - `pnpm start`: Starts the application in production mode.
 - `pnpm run dev`: Start the application in development mode using `ts-node-dev`.
 - `pnpm run build`: Build the TypeScript code into JavaScript.
-- `pnpm run test`: Placeholder script for running tests (You can configure your tests here).
+- `pnpm run test`: Run tests using Jest.
+- `pnpm run migrate`: Run Prisma migrations.
 
 ## Dependencies
 
@@ -115,9 +125,12 @@ To build and start the application in production mode, run:
 
 ## Dev Dependencies
 
-- `@types/bcrypt`, `@types/cors`, `@types/express`, `@types/jsonwebtoken`, `@types/morgan`: Type definitions for development.
+- `@types/bcrypt`, `@types/cors`, `@types/express`, `@types/jest`, `@types/jsonwebtoken`, `@types/morgan`, `@types/supertest`: Type definitions for development.
 - `@types/swagger-jsdoc` and `@types/swagger-ui-express`: Type definitions for Swagger.
+- `jest`: Testing framework.
+- `supertest`: HTTP assertion library.
 - `prisma`: Prisma CLI for database migrations and seeding.
+- `ts-jest`: TypeScript preprocessor for Jest.
 - `ts-node` and `ts-node-dev`: TypeScript execution environment for development.
 - `ts-standard`: TypeScript linter configuration.
 - `typescript`: TypeScript compiler.
