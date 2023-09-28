@@ -23,7 +23,7 @@ export class App{
   
   private app: Application;
 
-  constructor(private port?: number | string, private host?: string){
+  constructor(private port?: number | string){
     this.app = express();
     this.settings();
     this.middlewares();
@@ -31,7 +31,6 @@ export class App{
   }
 
   settings(){
-    this.app.set('host', this.host || process.env.SERVER_HOST || 'http://localhost');
     this.app.set('port', this.port || process.env.SERVER_PORT || 3333);
   }
 
@@ -52,10 +51,6 @@ export class App{
     this.app.use('/api/post', postRoutes);
     this.app.use('/api/whoami', whoamiRouets)
     this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions, swaggerUiOptions));
-  }
-
-  address(){
-    return `${this.app.get('host')}:${this.app.get('port')}`;
   }
 
   async start() {
