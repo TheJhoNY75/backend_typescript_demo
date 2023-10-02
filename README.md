@@ -6,6 +6,7 @@
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
   - [Installation](#installation)
+  - [Database Setup](#database-setup)
   - [Configuration](#configuration)
   - [Running the Application](#running-the-application)
 - [Scripts](#scripts)
@@ -70,11 +71,18 @@ Before you start, make sure you have the following software installed on your sy
 
    ```bash
     # Example .env file
-    HOST=http://localhost
-    PORT=3000
-    DB_URL=mysql://user:password@localhost:3306/db_name
-    JWT_SECRET=your-secret-key
-    BYCRYPT_SALT=10
+    SERVER_HOST=http://localhost
+    SERVER_PORT=3333
+
+    DB_HOST=mysql
+    DB_PORT=3306
+    DB_USER=db_user
+    DB_PASSWORD=db_password
+    DB_NAME=db_name
+    DB_URL=mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+
+    JWT_SECRET=
+    BYCRYPT_SALT=
    ```
 
    Make sure to replace the placeholders with your actual values.
@@ -95,7 +103,7 @@ To start the application in development mode, run:
   pnpm run dev
   ```
 
-The application will run at `http://localhost:3000`.
+The application will run at `http://localhost:3333`.
 
 To build and start the application in production mode, run:
 
