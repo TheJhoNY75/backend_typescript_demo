@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { User } from "../../interfaces/User";
 
 const SaltEnv = parseInt(process.env.BYCRYPT_SALT || '');
